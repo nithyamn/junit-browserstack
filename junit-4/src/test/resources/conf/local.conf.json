@@ -7,15 +7,15 @@
     "browserstack.use_w3c": true,
     "bstack:options": {
       "os": "Windows",
-      "osVersion": "7",
-      "sessionName": "single_test",
+      "osVersion": "10",
+      "sessionName": "local_test",
       "buildName": "junit-browserstack",
       "projectName": "My Test Project",
       "debug": true,
+      "local": true
     }
   },
-
   "environments": [{
-    "browserName": "chrome"
+    "browser": "edge"
   }]
 }

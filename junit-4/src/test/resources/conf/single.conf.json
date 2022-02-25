@@ -8,14 +8,14 @@
     "bstack:options": {
       "os": "Windows",
       "osVersion": "7",
-      "sessionName": "local_test",
+      "sessionName": "single_test",
       "buildName": "junit-browserstack",
       "projectName": "My Test Project",
-      "debug": true,
-      "local": true
+      "debug": true
     }
   },
+
   "environments": [{
-    "browser": "chrome"
+    "browserName": "chrome"
   }]
 }

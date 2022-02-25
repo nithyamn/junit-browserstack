@@ -3,7 +3,6 @@
   "user": "BROWSERSTACK_USERNAME",
   "key": "BROWSERSTACK_ACCESS_KEY",
   "capabilities": {
-    "browserstack.use_w3c": true,
     "bstack:options": {
       "sessionName": "parallel_test",
       "buildName": "junit-browserstack",
@@ -23,12 +22,6 @@
       "bstack:options": {
         "os": "OS X",
         "osVersion": "High Sierra"
-      }
-    },
-    {
-      "browser": "Internet Explorer",
-      "bstack:options": {
-        "os": "Windows"
       }
     }
   ]
