@@ -1,4 +1,4 @@
-## This repo covers BrowserStack integration with the JUnit frameworks in Selenium 4
+## This repo covers BrowserStack integration with the JUnit frameworks using Selenium 4
 
 More details in the README.md file of the individual frameworks.
 
