@@ -21,9 +21,9 @@ public class SingleTest extends BrowserStackJUnitTest {
       Thread.sleep(5000);
       assertTrue(driver.getTitle().matches("(?i)BrowserStack - Google Search"));
       mark(sessionId, "passed","Title matches!");
-    }catch (AssertionError e){
+    }catch (Throwable t){
       mark(sessionId, "failed","Title does not match!");
-      System.out.println("Exception: "+e);
+      System.out.println("Exception: "+t);
     }
   }
 }

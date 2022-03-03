@@ -4,18 +4,20 @@
   "key": "BROWSERSTACK_ACCESS_KEY",
 
   "capabilities": {
-    "browserstack.use_w3c": true,
     "bstack:options": {
-      "os": "Windows",
-      "osVersion": "7",
       "sessionName": "single_test",
       "buildName": "junit-browserstack",
       "projectName": "My Test Project",
+      "seleniumVersion": "4.0.0",
       "debug": true
     }
   },
-
   "environments": [{
-    "browserName": "chrome"
+    "bstack:options": {
+      "os": "Windows",
+      "osVersion": "11"
+    },
+    "browser": "Chrome",
+    "browserVersion": "latest"
   }]
 }
