@@ -17,9 +17,9 @@ public class LocalTest extends BrowserStackJUnitTest {
       assertTrue(driver.getPageSource().contains("Up and running"));
       mark(sessionId, "passed", "Local content validated!");
 
-    }catch (AssertionError e){
+    }catch (Throwable t){
       mark(sessionId, "failed","Local content not validated!");
-      System.out.println("Exception: "+e);
+      System.out.println("Exception: "+t);
     }
   }
 }

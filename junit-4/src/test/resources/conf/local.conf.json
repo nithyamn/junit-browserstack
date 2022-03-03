@@ -4,18 +4,21 @@
   "key": "BROWSERSTACK_ACCESS_KEY",
 
   "capabilities": {
-    "browserstack.use_w3c": true,
     "bstack:options": {
-      "os": "Windows",
-      "osVersion": "10",
       "sessionName": "local_test",
       "buildName": "junit-browserstack",
       "projectName": "My Test Project",
       "debug": true,
-      "local": true
+      "local": true,
+      "seleniumVersion": "4.0.0"
     }
   },
   "environments": [{
-    "browser": "edge"
+    "bstack:options": {
+      "os": "Windows",
+      "osVersion": "10"
+    },
+    "browser": "Edge",
+    "browserVersion": "latest-1"
   }]
 }

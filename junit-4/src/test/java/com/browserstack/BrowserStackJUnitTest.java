@@ -39,6 +39,7 @@ public class BrowserStackJUnitTest {
     public WebDriver driver;
     private Local bsLocal;
     public static String username, accessKey;
+    public HashMap<Object,Object> bstackOptions;
 
     private static JSONObject config;
 
@@ -59,7 +60,6 @@ public class BrowserStackJUnitTest {
                 taskIDs.add(i);
             }
         }
-
         return taskIDs;
     }
 
@@ -67,6 +67,7 @@ public class BrowserStackJUnitTest {
     @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
         JSONArray envs = (JSONArray) config.get("environments");
+        bstackOptions = new HashMap();
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
@@ -74,20 +75,24 @@ public class BrowserStackJUnitTest {
         Iterator<Map.Entry<String, Object>> it = envCapabilities.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<String, Object> pair = (Map.Entry<String, Object>) it.next();
-            capabilities.setCapability(pair.getKey().toString(), pair.getValue());
+            if(pair.getKey().toString().equals("bstack:options")){
+                bstackOptions.putAll((Map<? extends String, ?>) pair.getValue());
+            }else{
+                capabilities.setCapability(pair.getKey().toString(), pair.getValue());
+            }
         }
 
         Map<String, Object> commonCapabilities = (Map<String, Object>) config.get("capabilities");
         it = commonCapabilities.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<String, Object> pair = (Map.Entry<String, Object>) it.next();
-            Object envData = capabilities.getCapability(pair.getKey().toString());
-            Object resultData = pair.getValue();
-            if (envData != null && envData.getClass() == JSONObject.class) {
-                ((JSONObject) resultData).putAll((JSONObject) envData);
+            if(pair.getKey().toString().equals("bstack:options")){
+                bstackOptions.putAll((Map<? extends String, ?>) pair.getValue());
+            }else{
+                capabilities.setCapability(pair.getKey().toString(), pair.getValue());
             }
-            capabilities.setCapability(pair.getKey().toString(), resultData);
         }
+        capabilities.setCapability("bstack:options",bstackOptions);
 
         username = System.getenv("BROWSERSTACK_USERNAME");
         if (username == null) {
@@ -109,9 +114,11 @@ public class BrowserStackJUnitTest {
         if (bsLocal != null) {
             return;
         }
+        JSONObject localCaps = new JSONObject(bstackOptions);
+
         if (capabilities.getCapability("bstack:options") != null
-                && ((JSONObject) capabilities.getCapability("bstack:options")).get("local") != null
-                && ((Boolean) ((JSONObject) capabilities.getCapability("bstack:options")).get("local")) == true) {
+                && localCaps.get("local") != null
+                && ((Boolean) localCaps.get("local")) == true) {
             bsLocal = new Local();
             Map<String, String> options = new HashMap<String, String>();
             options.put("key", accessKey);

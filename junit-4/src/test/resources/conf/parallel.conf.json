@@ -7,21 +7,41 @@
       "sessionName": "parallel_test",
       "buildName": "junit-browserstack",
       "projectName": "My Test Project",
-      "debug": true
+      "debug": true,
+      "seleniumVersion": "4.0.0"
     }
   },
   "environments": [
     {
-      "browser": "chrome"
+      "browser": "chrome",
+      "bstack:options": {
+        "os": "OS X",
+        "osVersion": "Big Sur"
+      }
     },
     {
-      "browser": "firefox"
+      "browser": "firefox",
+      "bstack:options": {
+        "os": "Windows",
+        "osVersion": "11"
+      }
     },
     {
       "browser": "safari",
+      "browserVersion": "latest",
       "bstack:options": {
         "os": "OS X",
-        "osVersion": "High Sierra"
+        "osVersion": "Monterey"
+      }
+    },
+    {
+      "bstack:options": {
+        "deviceName": "Samsung Galaxy S21"
+      }
+    },
+    {
+      "bstack:options": {
+        "deviceName": "iPhone 12"
       }
     }
   ]
