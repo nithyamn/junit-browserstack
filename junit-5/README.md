@@ -28,10 +28,18 @@ Understand how many parallel sessions you need by using our [Parallel Test Calcu
 * To test on a different set of browsers, check out our [platform configurator](https://www.browserstack.com/automate/java#setting-os-and-browser)
 * You can export the environment variables for the Username and Access Key of your BrowserStack account.
 
+  * For Unix-like or Mac machines:
   ```
   export BROWSERSTACK_USERNAME=<browserstack-username> &&
   export BROWSERSTACK_ACCESS_KEY=<browserstack-access-key>
   ```
+  
+  * For Windows:
+  ```
+  set BROWSERSTACK_USERNAME=<browserstack-username>
+  set BROWSERSTACK_ACCESS_KEY=<browserstack-access-key>
+  ```
+
 
 ## Additional Resources
 * [Documentation for writing Automate test scripts in Java](https://www.browserstack.com/automate/java)
