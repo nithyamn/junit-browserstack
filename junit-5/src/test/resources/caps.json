@@ -1,13 +1,13 @@
 {
   "server": "hub-cloud.browserstack.com",
-  "username": "BROWSERSTACK_USERNAME",
-  "accesskey": "BROWSERSTACK_ACCESS_KEY",
+  "userName": "BROWSERSTACK_USERNAME",
+  "accessKey": "BROWSERSTACK_ACCESS_KEY",
   "tests": {
     "single": {
       "common_caps": {
         "bstack:options": {
           "buildName": "junit5-browserstack",
-          "sessionName":"single-test",
+          "sessionName": "single-test",
           "seleniumVersion": "4.0.0",
           "networkLogs": "true",
           "consoleLogs": "verbose",
@@ -29,7 +29,7 @@
       "common_caps": {
         "bstack:options": {
           "buildName": "junit5-browserstack",
-          "sessionName":"local-test",
+          "sessionName": "local-test",
           "seleniumVersion": "4.0.0",
           "consoleLogs": "verbose",
           "debug": "true",
@@ -48,81 +48,81 @@
       }
     },
     "parallel": {
-        "common_caps": {
+      "common_caps": {
+        "bstack:options": {
+          "buildName": "junit5-browserstack",
+          "sessionName": "parallel-test",
+          "seleniumVersion": "4.0.0",
+          "consoleLogs": "verbose",
+          "debug": "true"
+        }
+      },
+      "platform": {
+        "chrome": {
           "bstack:options": {
-            "buildName": "junit5-browserstack",
-            "sessionName":"parallel-test",
-            "seleniumVersion": "4.0.0",
-            "consoleLogs": "verbose",
-            "debug": "true"
+            "os": "Windows",
+            "osVersion": "10"
+          },
+          "browser": "chrome",
+          "browserVersion": "latest-1"
+        },
+        "safari": {
+          "bstack:options": {
+            "os": "OS X",
+            "osVersion": "Big Sur"
+          },
+          "browser": "safari",
+          "browserVersion": "latest"
+        },
+        "edge": {
+          "bstack:options": {
+            "os": "Windows",
+            "osVersion": "11"
+          },
+          "browser": "edge",
+          "browserVersion": "latest-2"
+        },
+        "firefox": {
+          "bstack:options": {
+            "os": "OS X",
+            "osVersion": "Monterey"
+          },
+          "browser": "firefox",
+          "browserVersion": "latest"
+        },
+        "android": {
+          "bstack:options": {
+            "deviceName": "Samsung Galaxy S21",
+            "osVersion": "11.0"
           }
         },
-        "platform":{
-          "chrome": {
-            "bstack:options": {
-              "os": "Windows",
-              "osVersion": "10"
-            },
-            "browser": "chrome",
-            "browserVersion": "latest-1"
-          },
-          "safari": {
-            "bstack:options":{
-              "os": "OS X",
-              "osVersion": "Big Sur"
-            },
-            "browser":"safari",
-            "browserVersion": "latest"
-          },
-          "edge": {
-            "bstack:options": {
-              "os": "Windows",
-              "osVersion": "11"
-            },
-            "browser": "edge",
-            "browserVersion": "latest-2"
-          },
-          "firefox": {
-            "bstack:options": {
-              "os": "OS X",
-              "osVersion": "Monterey"
-            },
-            "browser": "firefox",
-            "browserVersion": "latest"
-          },
-          "android": {
-            "bstack:options":{
-              "deviceName": "Samsung Galaxy S21",
-              "osVersion": "11.0"
-            }
-          },
-          "ios": {
-            "bstack:options":{
-              "deviceName": "iPhone 12 Mini",
-              "osVersion": "14"
-            }
-          },
-          "tab": {
-            "bstack:options": {
-              "deviceName": "Samsung Galaxy Tab S7"
-            }
-          },
-          "ipad": {
-            "bstack:options": {
-              "deviceName": "iPad Mini 2019"
-            }
-          },
-          "xiaomi": {
-            "bstack:options": {
-              "deviceName": "Xiaomi Redmi Note 9"
-            }
-          },
-          "oneplus": {
-            "bstack:options": {
-              "deviceName": "OnePlus 9"
-            }
+        "ios": {
+          "bstack:options": {
+            "deviceName": "iPhone 12 Mini",
+            "osVersion": "14"
+          }
+        },
+        "tab": {
+          "bstack:options": {
+            "deviceName": "Samsung Galaxy Tab S7"
+          }
+        },
+        "ipad": {
+          "bstack:options": {
+            "deviceName": "iPad Mini 2019"
+          }
+        },
+        "xiaomi": {
+          "bstack:options": {
+            "deviceName": "Xiaomi Redmi Note 9"
+          }
+        },
+        "oneplus": {
+          "bstack:options": {
+            "deviceName": "OnePlus 9"
           }
         }
       }
     }
   }
+}

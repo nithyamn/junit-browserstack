@@ -1,8 +1,7 @@
 {
   "server": "hub-cloud.browserstack.com",
-  "user": "BROWSERSTACK_USERNAME",
-  "key": "BROWSERSTACK_ACCESS_KEY",
-
+  "userName": "BROWSERSTACK_USERNAME",
+  "accessKey": "BROWSERSTACK_ACCESS_KEY",
   "capabilities": {
     "bstack:options": {
       "sessionName": "local_test",
@@ -13,12 +12,14 @@
       "seleniumVersion": "4.0.0"
     }
   },
-  "environments": [{
-    "bstack:options": {
-      "os": "Windows",
-      "osVersion": "10"
-    },
-    "browser": "Edge",
-    "browserVersion": "latest-1"
-  }]
+  "environments": [
+    {
+      "bstack:options": {
+        "os": "Windows",
+        "osVersion": "10"
+      },
+      "browser": "Edge",
+      "browserVersion": "latest-1"
+    }
+  ]
 }
