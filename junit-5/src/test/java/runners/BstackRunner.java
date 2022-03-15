@@ -32,28 +32,32 @@ public class BstackRunner implements TestTemplateInvocationContextProvider {
 
 
     public BstackRunner() {
-        this.username = setupCredentials()[0];
-        this.accesskey = setupCredentials()[1];
-        this.server = setupCredentials()[2];
+        this.username = setupCredsAndServer().get("username");
+        this.accesskey = setupCredsAndServer().get("accesskey");
+        this.server = setupCredsAndServer().get("server");
     }
 
-    public String[] setupCredentials() {
+    public HashMap<String, String> setupCredsAndServer() {
         try {
             JSONParser parse = new JSONParser();
-            mainConfig = (JSONObject) parse.parse(new FileReader(System.getProperty("user.dir") + "/src/test/resources/caps.json"));
+            mainConfig = (JSONObject) parse.parse(new FileReader("src/test/resources/caps.json"));
             server = (String) mainConfig.get("server");
             username = System.getenv("BROWSERSTACK_USERNAME");
             if (username == null) {
-                username = (String) mainConfig.get("userName");
+                username = (String) mainConfig.get("user");
             }
             accesskey = System.getenv("BROWSERSTACK_ACCESS_KEY");
             if (accesskey == null) {
-                accesskey = (String) mainConfig.get("accessKey");
+                accesskey = (String) mainConfig.get("key");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return (new String[]{username, accesskey, server});
+        HashMap<String, String> creds = new HashMap();
+        creds.put("username", username);
+        creds.put("accesskey", accesskey);
+        creds.put("server", server);
+        return creds;
     }
 
     @Override
