@@ -1,5 +1,5 @@
 {
-  "server": "hub-cloud.browserstack.com",
+  "server": "hub.browserstack.com",
   "userName": "BROWSERSTACK_USERNAME",
   "accessKey": "BROWSERSTACK_ACCESS_KEY",
   "tests": {
