@@ -42,7 +42,7 @@
             "os": "Windows",
             "osVersion": "11"
           },
-          "browserName": "edge",
+          "browserName": "chrome",
           "browserVersion": "latest"
         }
       }
