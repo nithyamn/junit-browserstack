@@ -1,15 +1,24 @@
 {
   "server": "hub.browserstack.com",
-  "user": "BROWSERSTACK_USERNAME",
-  "key": "BROWSERSTACK_ACCESS_KEY",
+  "userName": "BROWSERSTACK_USERNAME",
+  "accessKey": "BROWSERSTACK_ACCESS_KEY",
   "capabilities": {
-    "build": "junit-browserstack",
-    "name": "single_test",
-    "browserstack.debug": true
+    "bstack:options": {
+      "sessionName": "single_test",
+      "buildName": "junit-browserstack",
+      "projectName": "My Test Project",
+      "seleniumVersion": "4.0.0",
+      "debug": true
+    }
   },
   "environments": [
     {
-      "browser": "chrome"
+      "bstack:options": {
+        "os": "Windows",
+        "osVersion": "11"
+      },
+      "browser": "Chrome",
+      "browserVersion": "latest"
     }
   ]
 }

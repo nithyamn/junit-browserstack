@@ -21,7 +21,6 @@ import org.openqa.selenium.remote.SessionId;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -32,9 +31,10 @@ public class BrowserStackJUnitTest {
     public static String username, accessKey;
     private static JSONObject config;
     public WebDriver driver;
+    public HashMap<String, String> bstackOptions;
     @Parameter(value = 0)
     public int taskID;
-    private Local l;
+    private Local bsLocal;
 
     @Parameters
     public static Iterable<? extends Object> data() throws Exception {
@@ -42,14 +42,14 @@ public class BrowserStackJUnitTest {
 
         if (System.getProperty("config") != null) {
             JSONParser parser = new JSONParser();
-            config = (JSONObject) parser.parse(new FileReader("src/test/resources/conf/" + System.getProperty("config")));
+            config = (JSONObject) parser
+                    .parse(new FileReader("src/test/resources/conf/" + System.getProperty("config")));
             int envs = ((JSONArray) config.get("environments")).size();
 
             for (int i = 0; i < envs; i++) {
                 taskIDs.add(i);
             }
         }
-
         return taskIDs;
     }
 
@@ -66,50 +66,73 @@ public class BrowserStackJUnitTest {
     }
 
     @Before
+    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
         JSONArray envs = (JSONArray) config.get("environments");
+        bstackOptions = new HashMap();
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        Map<String, String> envCapabilities = (Map<String, String>) envs.get(taskID);
-        Iterator it = envCapabilities.entrySet().iterator();
+        Map<String, Object> envCapabilities = (Map<String, Object>) envs.get(taskID);
+        Iterator<Map.Entry<String, Object>> it = envCapabilities.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            capabilities.setCapability(pair.getKey().toString(), pair.getValue().toString());
-        }
-
-        Map<String, String> commonCapabilities = (Map<String, String>) config.get("capabilities");
-        it = commonCapabilities.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry) it.next();
-            if (capabilities.getCapability(pair.getKey().toString()) == null) {
-                capabilities.setCapability(pair.getKey().toString(), pair.getValue().toString());
+            Map.Entry<String, Object> pair = it.next();
+            if ("bstack:options".equals(pair.getKey())) {
+                bstackOptions.putAll((Map<? extends String, ? extends String>) pair.getValue());
+            } else {
+                capabilities.setCapability(pair.getKey(), pair.getValue());
             }
         }
 
+        Map<String, Object> commonCapabilities = (Map<String, Object>) config.get("capabilities");
+        it = commonCapabilities.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<String, Object> pair = it.next();
+            if ("bstack:options".equals(pair.getKey())) {
+                bstackOptions.putAll((Map<? extends String, ? extends String>) pair.getValue());
+            } else {
+                capabilities.setCapability(pair.getKey(), pair.getValue());
+            }
+        }
+        capabilities.setCapability("bstack:options", bstackOptions);
+
         username = System.getenv("BROWSERSTACK_USERNAME");
         if (username == null) {
-            username = (String) config.get("user");
+            username = (String) config.get("userName");
         }
 
         accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY");
         if (accessKey == null) {
-            accessKey = (String) config.get("key");
+            accessKey = (String) config.get("accessKey");
         }
 
-        if (capabilities.getCapability("browserstack.local") != null && capabilities.getCapability("browserstack.local") == "true") {
-            l = new Local();
+        this.checkAndStartBrowserStackLocal(capabilities, accessKey);
+
+        driver = new RemoteWebDriver(
+                new URL("https://" + username + ":" + accessKey + "@" + config.get("server") + "/wd/hub"), capabilities);
+    }
+
+    public void checkAndStartBrowserStackLocal(DesiredCapabilities capabilities, String accessKey) throws Exception {
+        if (bsLocal != null) {
+            return;
+        }
+        JSONObject localCaps = new JSONObject(bstackOptions);
+
+        if (capabilities.getCapability("bstack:options") != null
+                && localCaps.get("local") != null
+                && ((Boolean) localCaps.get("local")) == true) {
+            bsLocal = new Local();
             Map<String, String> options = new HashMap<String, String>();
             options.put("key", accessKey);
-            l.start(options);
+            bsLocal.start(options);
         }
-
-        driver = new RemoteWebDriver(new URL("https://" + username + ":" + accessKey + "@" + config.get("server") + "/wd/hub"), capabilities);
     }
 
     @After
     public void tearDown() throws Exception {
         driver.quit();
-        if (l != null) l.stop();
+        if (bsLocal != null) {
+            bsLocal.stop();
+        }
     }
 }

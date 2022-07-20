@@ -26,6 +26,10 @@ public class BstackRunner implements TestTemplateInvocationContextProvider {
     private JSONObject commonCapsConfig;
     private HashMap<String, String> allCapsMap;
     private HashMap<String, String> commonCapsMap;
+    private HashMap<String, String> bstackOptions;
+    private HashMap<String, String> bstackOptionsCommonCaps;
+    private HashMap<String, String> bstackOptionsPlatform;
+
 
     public BstackRunner() {
         this.username = setupCredsAndServer().get("username");
@@ -64,6 +68,7 @@ public class BstackRunner implements TestTemplateInvocationContextProvider {
     @Override
     public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext extensionContext) {
         List<TestTemplateInvocationContext> desiredCapsInvocationContexts = new ArrayList<>();
+
         //picks the test profile based on the maven command executed - single, local, parallel
         String profile = System.getProperty("config");
 
@@ -73,32 +78,47 @@ public class BstackRunner implements TestTemplateInvocationContextProvider {
             platformConfig = (JSONObject) profileConfig.get("platform");
             commonCapsConfig = (JSONObject) profileConfig.get("common_caps");
             commonCapsMap = (HashMap<String, String>) commonCapsConfig;
-            Iterator platformIterator = platformConfig.keySet().iterator();
 
+            Iterator platformIterator = platformConfig.keySet().iterator();
             while (platformIterator.hasNext()) {
+
                 capabilities = new DesiredCapabilities();
                 Iterator commonCapsIterator = commonCapsMap.entrySet().iterator();
                 while (commonCapsIterator.hasNext()) {
                     Map.Entry capsName = (Map.Entry) commonCapsIterator.next();
-                    capabilities.setCapability((String) capsName.getKey(), capsName.getValue());
+                    if ("bstack:options".equals(capsName.getKey().toString())) {
+                        bstackOptionsCommonCaps = (HashMap<String, String>) commonCapsConfig.get("bstack:options");
+                    } else {
+                        capabilities.setCapability((String) capsName.getKey(), capsName.getValue());
+                    }
                 }
-                final String platformName = (String) platformIterator.next();
-                browserConfig = (JSONObject) platformConfig.get(platformName);
+
+                final String platformType = (String) platformIterator.next();
+                browserConfig = (JSONObject) platformConfig.get(platformType);
                 allCapsMap = (HashMap<String, String>) browserConfig;
+
                 Iterator finalCapsIterator = allCapsMap.entrySet().iterator();
                 while (finalCapsIterator.hasNext()) {
-                    Map.Entry pair = (Map.Entry) finalCapsIterator.next();
-                    capabilities.setCapability((String) pair.getKey(), pair.getValue());
+                    Map.Entry platformName = (Map.Entry) finalCapsIterator.next();
+                    if ("bstack:options".equals(platformName.getKey().toString())) {
+                        bstackOptionsPlatform = (HashMap<String, String>) browserConfig.get("bstack:options");
+                    } else {
+                        capabilities.setCapability((String) platformName.getKey(), platformName.getValue());
+                    }
                 }
                 //Initializing local testing connection
-                if (capabilities.getCapability("browserstack.local") != null && capabilities.getCapability("browserstack.local").toString().equals("true")) {
+                if (bstackOptionsCommonCaps.containsKey("local")) {
                     HashMap<String, String> localOptions = new HashMap<>();
                     localOptions.put("key", accesskey);
                     //Add more local options here, e.g. forceLocal, localIdentifier, etc.
                     SetupLocalTesting.createInstance(localOptions);
                 }
-                desiredCapsInvocationContexts.add(invocationContext(capabilities));
+                bstackOptions = new HashMap<>();
+                bstackOptions.putAll(bstackOptionsCommonCaps);
+                bstackOptions.putAll(bstackOptionsPlatform);
+                capabilities.setCapability("bstack:options", bstackOptions);
 
+                desiredCapsInvocationContexts.add(invocationContext(capabilities));
             }
         } catch (Exception e) {
             System.out.println(e);

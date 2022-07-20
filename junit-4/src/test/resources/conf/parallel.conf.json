@@ -1,31 +1,48 @@
 {
   "server": "hub.browserstack.com",
-  "user": "BROWSERSTACK_USERNAME",
-  "key": "BROWSERSTACK_ACCESS_KEY",
+  "userName": "BROWSERSTACK_USERNAME",
+  "accessKey": "BROWSERSTACK_ACCESS_KEY",
   "capabilities": {
-    "build": "junit-browserstack",
-    "name": "parallel_test",
-    "browserstack.debug": true
+    "bstack:options": {
+      "sessionName": "parallel_test",
+      "buildName": "junit-browserstack",
+      "projectName": "My Test Project",
+      "debug": true,
+      "seleniumVersion": "4.0.0"
+    }
   },
   "environments": [
     {
-      "browser": "chrome"
+      "browser": "chrome",
+      "bstack:options": {
+        "os": "OS X",
+        "osVersion": "Big Sur"
+      }
     },
     {
-      "browser": "firefox"
+      "browser": "firefox",
+      "bstack:options": {
+        "os": "Windows",
+        "osVersion": "11"
+      }
     },
     {
       "browser": "safari",
-      "os": "OS X"
+      "browserVersion": "latest",
+      "bstack:options": {
+        "os": "OS X",
+        "osVersion": "Monterey"
+      }
     },
     {
-      "browser": "Internet Explorer"
+      "bstack:options": {
+        "deviceName": "Samsung Galaxy S21"
+      }
     },
     {
-      "device": "Samsung Galaxy S21"
-    },
-    {
-      "device": "iPhone 12"
+      "bstack:options": {
+        "deviceName": "iPhone 12"
+      }
     }
   ]
 }

@@ -10,16 +10,18 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import runners.WebDriverTest;
 import utils.MarkSessionStatus;
 
+import java.time.Duration;
+
 public class SingleTest {
 
     @WebDriverTest
     void singleTest(WebDriver driver) {
-        SessionId sessionId = ((RemoteWebDriver)driver).getSessionId();
+        SessionId sessionId = ((RemoteWebDriver) driver).getSessionId();
         MarkSessionStatus sessionStatus = new MarkSessionStatus(sessionId);
 
         try {
             driver.get("https://bstackdemo.com/");
-            final WebDriverWait wait = new WebDriverWait(driver, 10);
+            final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
             wait.until(ExpectedConditions.titleIs("StackDemo"));
             String product_name = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='1']/p"))).getText();
             WebElement cart_btn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='1']/div[4]")));
@@ -41,7 +43,7 @@ public class SingleTest {
     //@WebDriverTest
     void bstackTest(WebDriver driver) {
         driver.get("https://bstackdemo.com/");
-        System.out.println("Test 1: " + Thread.currentThread().getName());
+        System.out.println("Test1: " + Thread.currentThread().getName());
         driver.quit();
     }
 }
