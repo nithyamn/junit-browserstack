@@ -1,5 +1,5 @@
 ##  junit5-browserstack
-Master branch contains **Selenium 3** samples, for **Selenium 4 - W3C protocol** please checkout [selenium-4](https://github.com/nithyamn/junit5-browserstack/tree/selenium-4) branch
+Master branch contains **Selenium 4 - W3C protocol** samples, for **Selenium 3** please checkout [selenium-3](https://github.com/nithyamn/junit5-browserstack/tree/selenium-3) branch
 </br>
 <a href="https://browserstack.com"><img src="https://avatars.githubusercontent.com/u/1119453?s=200&v=4" width="40" height="40"></a>
 <a href="https://junit.org/junit5/"><img src="https://camo.githubusercontent.com/abbaedce4b226ea68b0fd43521472b0b146d5ed57956116f69752f43e7ddd7d8/68747470733a2f2f6a756e69742e6f72672f6a756e6974352f6173736574732f696d672f6a756e6974352d6c6f676f2e706e67" width="40" height="40" ></a>
