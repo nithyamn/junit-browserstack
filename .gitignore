@@ -22,3 +22,4 @@ browserstack.err
 local.log
 *.png
 *.txt
+**/logs

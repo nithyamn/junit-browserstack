@@ -1,51 +1,42 @@
 package com.browserstack;
 
-import com.browserstack.local.Local;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.SessionId;
+import org.yaml.snakeyaml.Yaml;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.*;
 
 @RunWith(Parallelized.class)
 public class BrowserStackJUnitTest {
     public static String username, accessKey;
-    private static JSONObject config;
+    private static Map<String, Object> browserstackYamlMap;
     public WebDriver driver;
-    public HashMap<String, String> bstackOptions;
     @Parameter(value = 0)
     public int taskID;
-    private Local bsLocal;
+    public static final String USER_DIR = "user.dir";
 
     @Parameters
-    public static Iterable<? extends Object> data() throws Exception {
+    public static Iterable<? extends Object> data() {
         List<Integer> taskIDs = new ArrayList<Integer>();
-
-        if (System.getProperty("config") != null) {
-            JSONParser parser = new JSONParser();
-            config = (JSONObject) parser
-                    .parse(new FileReader("src/test/resources/conf/" + System.getProperty("config")));
-            int envs = ((JSONArray) config.get("environments")).size();
-
+        if (browserstackYamlMap == null) {
+            File file = new File(getUserDir() + "/browserstack.yml");
+            browserstackYamlMap = convertYamlFileToMap(file, new HashMap<>());
+        }
+        if (browserstackYamlMap != null) {
+            ArrayList<LinkedHashMap<String, Object>> browserStackPlatforms = (ArrayList<LinkedHashMap<String, Object>>) browserstackYamlMap.get("platforms");
+            int envs = browserStackPlatforms.size();
             for (int i = 0; i < envs; i++) {
                 taskIDs.add(i);
             }
@@ -53,86 +44,47 @@ public class BrowserStackJUnitTest {
         return taskIDs;
     }
 
-    public static void mark(SessionId sessionID, String status, String reason) throws URISyntaxException, IOException {
-        URI uri = new URI("https://" + username + ":" + accessKey + "@api.browserstack.com/automate/sessions/" + sessionID + ".json");
-        HttpPut putRequest = new HttpPut(uri);
-
-        ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-        nameValuePairs.add((new BasicNameValuePair("status", status)));
-        nameValuePairs.add((new BasicNameValuePair("reason", reason)));
-        putRequest.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-        HttpClientBuilder.create().build().execute(putRequest);
+    public static void mark(WebDriver remoteDriver, String status, String reason) {
+        final JavascriptExecutor jse = (JavascriptExecutor) remoteDriver;
+        JSONObject executorObject = new JSONObject();
+        JSONObject argumentsObject = new JSONObject();
+        argumentsObject.put("status", status);
+        argumentsObject.put("reason", reason);
+        executorObject.put("action", "setSessionStatus");
+        executorObject.put("arguments", argumentsObject);
+        jse.executeScript(String.format("browserstack_executor: %s", executorObject));
     }
 
     @Before
-    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
-        JSONArray envs = (JSONArray) config.get("environments");
-        bstackOptions = new HashMap();
-
+        if (browserstackYamlMap == null) {
+            File file = new File(getUserDir() + "/browserstack.yml");
+            browserstackYamlMap = convertYamlFileToMap(file, new HashMap<>());
+        }
+        Thread.currentThread().setName(this.getClass().getName() + "@" + taskID);
         DesiredCapabilities capabilities = new DesiredCapabilities();
-
-        Map<String, Object> envCapabilities = (Map<String, Object>) envs.get(taskID);
-        Iterator<Map.Entry<String, Object>> it = envCapabilities.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Object> pair = it.next();
-            if ("bstack:options".equals(pair.getKey())) {
-                bstackOptions.putAll((Map<? extends String, ? extends String>) pair.getValue());
-            } else {
-                capabilities.setCapability(pair.getKey(), pair.getValue());
-            }
-        }
-
-        Map<String, Object> commonCapabilities = (Map<String, Object>) config.get("capabilities");
-        it = commonCapabilities.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, Object> pair = it.next();
-            if ("bstack:options".equals(pair.getKey())) {
-                bstackOptions.putAll((Map<? extends String, ? extends String>) pair.getValue());
-            } else {
-                capabilities.setCapability(pair.getKey(), pair.getValue());
-            }
-        }
-        capabilities.setCapability("bstack:options", bstackOptions);
-
-        username = System.getenv("BROWSERSTACK_USERNAME");
-        if (username == null) {
-            username = (String) config.get("userName");
-        }
-
-        accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY");
-        if (accessKey == null) {
-            accessKey = (String) config.get("accessKey");
-        }
-
-        this.checkAndStartBrowserStackLocal(capabilities, accessKey);
-
-        driver = new RemoteWebDriver(
-                new URL("https://" + username + ":" + accessKey + "@" + config.get("server") + "/wd/hub"), capabilities);
+        this.driver = new RemoteWebDriver(
+                new URL("https://" + username + ":" + accessKey + "@hub.browserstack.com/wd/hub"), capabilities);
     }
 
-    public void checkAndStartBrowserStackLocal(DesiredCapabilities capabilities, String accessKey) throws Exception {
-        if (bsLocal != null) {
-            return;
-        }
-        JSONObject localCaps = new JSONObject(bstackOptions);
+    private static String getUserDir() {
+        return System.getProperty(USER_DIR);
+    }
 
-        if (capabilities.getCapability("bstack:options") != null
-                && localCaps.get("local") != null
-                && ((Boolean) localCaps.get("local")) == true) {
-            bsLocal = new Local();
-            Map<String, String> options = new HashMap<String, String>();
-            options.put("key", accessKey);
-            bsLocal.start(options);
+    private static Map<String, Object> convertYamlFileToMap(File yamlFile, Map<String, Object> map) {
+        try {
+            InputStream inputStream = Files.newInputStream(yamlFile.toPath());
+            Yaml yaml = new Yaml();
+            Map<String, Object> config = yaml.load(inputStream);
+            map.putAll(config);
+        } catch (Exception e) {
+            throw new RuntimeException(String.format("Malformed browserstack.yml file - %s.", e));
         }
+        return map;
     }
 
     @After
-    public void tearDown() throws Exception {
-        driver.quit();
-        if (bsLocal != null) {
-            bsLocal.stop();
-        }
+    public void tearDown() {
+        this.driver.quit();
     }
 }
