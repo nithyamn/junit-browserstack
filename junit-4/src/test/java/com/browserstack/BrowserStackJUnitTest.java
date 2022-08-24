@@ -1,5 +1,6 @@
 package com.browserstack;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.Before;
@@ -7,8 +8,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.yaml.snakeyaml.Yaml;
 
@@ -20,7 +21,7 @@ import java.util.*;
 
 @RunWith(Parallelized.class)
 public class BrowserStackJUnitTest {
-    public static String username, accessKey;
+    public static String userName, accessKey;
     private static Map<String, Object> browserstackYamlMap;
     public WebDriver driver;
     @Parameter(value = 0)
@@ -62,9 +63,49 @@ public class BrowserStackJUnitTest {
             browserstackYamlMap = convertYamlFileToMap(file, new HashMap<>());
         }
         Thread.currentThread().setName(this.getClass().getName() + "@" + taskID);
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        MutableCapabilities capabilities = new MutableCapabilities();
+        HashMap<String, Object> bStackOptions = new HashMap<>();
+        browserstackYamlMap.forEach((key, value) -> {
+            if (key.equalsIgnoreCase("userName")) {
+                userName = System.getenv("BROWSERSTACK_USERNAME") != null ? System.getenv("BROWSERSTACK_USERNAME") : (String) value;
+            } else if (key.equalsIgnoreCase("accessKey")) {
+                accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY") != null ? System.getenv("BROWSERSTACK_ACCESS_KEY") : (String) value;
+            } else if (key.equalsIgnoreCase("platforms")) {
+                ArrayList<LinkedHashMap<String, Object>> platformsArrayList = (ArrayList<LinkedHashMap<String, Object>>) value;
+                platformsArrayList.get(taskID).forEach((k, v) -> {
+                    if (k.equalsIgnoreCase("browserName") || k.equalsIgnoreCase("browserVersion")) {
+                        capabilities.setCapability(k, v.toString());
+                    } else {
+                        bStackOptions.put(k, v.toString());
+                    }
+                });
+            } else if (key.equalsIgnoreCase("browserstackLocal") ||
+                    key.equalsIgnoreCase("local")) {
+                bStackOptions.put("local", value);
+            } else if (key.equalsIgnoreCase("browserStackLocalOptions") ||
+                    key.equalsIgnoreCase("localOptions")) {
+                if (value instanceof LinkedHashMap) {
+                    ArrayList<LinkedHashMap<String, Object>> localOptionsArrayList = (ArrayList<LinkedHashMap<String, Object>>) value;
+                    localOptionsArrayList.forEach(localOptionsMap -> {
+                        if (((Boolean) browserstackYamlMap.get("browserstackLocal") || (Boolean) browserstackYamlMap.get("local"))
+                                && localOptionsMap.containsKey("localIdentifier")) {
+                            bStackOptions.put("localIdentifier", localOptionsMap.get("localIdentifier").toString());
+                        }
+                    });
+                } else if (value instanceof HashMap) {
+                    HashMap<String, ?> localOptionsHashMap = (HashMap<String, ?>) new ObjectMapper().convertValue(value, HashMap.class);
+                    if (((Boolean) browserstackYamlMap.get("browserstackLocal") || (Boolean) browserstackYamlMap.get("local"))
+                            && localOptionsHashMap.containsKey("localIdentifier")) {
+                        bStackOptions.put("localIdentifier", localOptionsHashMap.get("localIdentifier").toString());
+                    }
+                }
+            } else {
+                bStackOptions.put(key, value);
+            }
+        });
+        capabilities.setCapability("bstack:options", bStackOptions);
         this.driver = new RemoteWebDriver(
-                new URL("https://" + username + ":" + accessKey + "@hub.browserstack.com/wd/hub"), capabilities);
+                new URL("https://" + userName + ":" + accessKey + "@hub.browserstack.com/wd/hub"), capabilities);
     }
 
     private static String getUserDir() {

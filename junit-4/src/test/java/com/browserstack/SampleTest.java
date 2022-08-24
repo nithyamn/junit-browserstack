@@ -6,16 +6,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.Duration;
 
 import static org.junit.Assert.assertTrue;
 
-public class SingleTest extends BrowserStackJUnitTest {
+public class SampleTest extends BrowserStackJUnitTest {
 
     @Test
-    public void test() throws URISyntaxException, IOException {
+    public void test() {
         try {
             driver.get("https://bstackdemo.com/");
             final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
