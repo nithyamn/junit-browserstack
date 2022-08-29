@@ -7,8 +7,7 @@ Master branch contains **Selenium 4 - W3C protocol** samples, for **Selenium 3**
 ## Setup
 * Clone the repo
 * Install dependencies `mvn install`
-* Update credentials in the `/src/test/resources/caps.json` file with your [BrowserStack Username and Access Key](https://www.browserstack.com/accounts/settings).
-* The platform details can be modified in the `/src/test/resources/caps.json` file within the respective profile i.e. `single`, `local`, `parallel`. Refer to our [Capabilities Generator](https://www.browserstack.com/automate/capabilities?tag=selenium-4) page for all platform and capabilities related information.
+* Update `browserstack.yml` files inside the root directory with your [BrowserStack Username and Access Key](https://www.browserstack.com/accounts/settings).
 * For parallel testing, control the concurrency by setting the value for `parallel.count`. Junit 5 uses the following properties for parallelism:
   ```
   junit.jupiter.execution.parallel.enabled = true
@@ -39,13 +38,6 @@ Understand how many parallel sessions you need by using our [Parallel Test Calcu
   set BROWSERSTACK_USERNAME=<browserstack-username>
   set BROWSERSTACK_ACCESS_KEY=<browserstack-access-key>
   ```
-
-
-## Additional Resources
-* [Documentation for writing Automate test scripts in Java](https://www.browserstack.com/automate/java)
-* [Customizing your tests on BrowserStack](https://www.browserstack.com/automate/capabilities)
-* [Browsers & mobile devices for selenium testing on BrowserStack](https://www.browserstack.com/list-of-browsers-and-platforms?product=automate)
-* [Using REST API to access information about your tests via the command-line interface](https://www.browserstack.com/automate/rest-api)
 
 ## Open Issues
 * Value for `junit.jupiter.execution.parallel.config.fixed.parallelism` gets multiplied in selenium versions above `4.0.0-alpha-3`. 
