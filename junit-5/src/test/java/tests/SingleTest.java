@@ -3,8 +3,6 @@ package tests;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.SessionId;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import runners.WebDriverTest;
@@ -16,8 +14,7 @@ public class SingleTest {
 
     @WebDriverTest
     void singleTest(WebDriver driver) {
-        SessionId sessionId = ((RemoteWebDriver) driver).getSessionId();
-        MarkSessionStatus sessionStatus = new MarkSessionStatus(sessionId);
+        MarkSessionStatus sessionStatus = new MarkSessionStatus(driver);
 
         try {
             driver.get("https://bstackdemo.com/");
@@ -37,13 +34,6 @@ public class SingleTest {
             sessionStatus.markTestStatus("failed", "There was some issue!");
             System.out.println("Exception: " + e.getMessage());
         }
-        driver.quit();
-    }
-
-    //@WebDriverTest
-    void bstackTest(WebDriver driver) {
-        driver.get("https://bstackdemo.com/");
-        System.out.println("Test1: " + Thread.currentThread().getName());
         driver.quit();
     }
 }

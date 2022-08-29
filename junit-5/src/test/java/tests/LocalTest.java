@@ -2,8 +2,6 @@ package tests;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.SessionId;
 import runners.WebDriverTest;
 import utils.MarkSessionStatus;
 
@@ -12,8 +10,7 @@ public class LocalTest {
 
     @WebDriverTest
     void localTest(WebDriver driver) {
-        SessionId sessionId = ((RemoteWebDriver) driver).getSessionId();
-        MarkSessionStatus sessionStatus = new MarkSessionStatus(sessionId);
+        MarkSessionStatus sessionStatus = new MarkSessionStatus(driver);
 
         try {
             driver.get("http://localhost:45691/check");
