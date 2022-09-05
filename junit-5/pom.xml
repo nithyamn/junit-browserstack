@@ -54,11 +54,6 @@
             <version>${httpclient}</version>
         </dependency>
         <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>${snakeyml.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.browserstack</groupId>
             <artifactId>browserstack-java-sdk</artifactId>
             <version>LATEST</version>
@@ -83,6 +78,15 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin}</version>
+                <configuration>
+                    <includes>
+                        <include>${tests.single}</include>
+                    </includes>
+                    <argLine>
+                        -javaagent:${com.browserstack:browserstack-java-sdk:jar}
+                    </argLine>
+                    <testFailureIgnore>false</testFailureIgnore>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -99,6 +103,9 @@
                             <includes>
                                 <include>${tests.single}</include>
                             </includes>
+                            <argLine>
+                                -javaagent:${com.browserstack:browserstack-java-sdk:jar}
+                            </argLine>
                             <testFailureIgnore>false</testFailureIgnore>
                         </configuration>
                     </plugin>
@@ -120,32 +127,6 @@
                             <argLine>
                                 -javaagent:${com.browserstack:browserstack-java-sdk:jar}
                             </argLine>
-                            <testFailureIgnore>false</testFailureIgnore>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>parallel</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.0.0-M5</version>
-                        <configuration>
-                            <includes>
-                                <include>${tests.single}</include>
-                            </includes>
-                            <properties>
-                                <configurationParameters>
-                                    junit.jupiter.execution.parallel.enabled = true
-                                    junit.jupiter.execution.parallel.mode.default = concurrent
-                                    junit.jupiter.execution.parallel.config.strategy=fixed
-                                    junit.jupiter.execution.parallel.config.fixed.parallelism=${parallel.count}
-                                </configurationParameters>
-                            </properties>
                             <testFailureIgnore>false</testFailureIgnore>
                         </configuration>
                     </plugin>
