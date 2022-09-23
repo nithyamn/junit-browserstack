@@ -8,6 +8,7 @@
       "buildName": "junit-browserstack",
       "projectName": "My Test Project",
       "seleniumVersion": "4.0.0",
+      "source": "junit-4:sample-master-v1.0",
       "debug": true
     }
   },

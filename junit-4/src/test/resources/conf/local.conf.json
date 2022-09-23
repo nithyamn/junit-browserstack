@@ -7,6 +7,7 @@
       "sessionName": "local_test",
       "buildName": "junit-browserstack",
       "projectName": "My Test Project",
+      "source": "junit-4:sample-master-v1.0",
       "debug": true,
       "local": true,
       "seleniumVersion": "4.0.0"
