@@ -9,6 +9,7 @@
           "buildName": "junit5-browserstack",
           "sessionName": "single-test",
           "seleniumVersion": "4.0.0",
+          "source": "junit-5:sample-master-v1.0",
           "networkLogs": "true",
           "consoleLogs": "verbose",
           "debug": "true"
@@ -30,6 +31,7 @@
         "bstack:options": {
           "buildName": "junit5-browserstack",
           "sessionName": "local-test",
+          "source": "junit-5:sample-master-v1.0",
           "seleniumVersion": "4.0.0",
           "consoleLogs": "verbose",
           "debug": "true",
@@ -52,6 +54,7 @@
         "bstack:options": {
           "buildName": "junit5-browserstack",
           "sessionName": "parallel-test",
+          "source": "junit-5:sample-master-v1.0",
           "seleniumVersion": "4.0.0",
           "consoleLogs": "verbose",
           "debug": "true"
