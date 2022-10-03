@@ -116,6 +116,7 @@ public class BstackRunner implements TestTemplateInvocationContextProvider {
                 bstackOptions = new HashMap<>();
                 bstackOptions.putAll(bstackOptionsCommonCaps);
                 bstackOptions.putAll(bstackOptionsPlatform);
+                bstackOptions.put("source","junit-5:sample-master:v1.0");
                 capabilities.setCapability("bstack:options", bstackOptions);
 
                 desiredCapsInvocationContexts.add(invocationContext(capabilities));
