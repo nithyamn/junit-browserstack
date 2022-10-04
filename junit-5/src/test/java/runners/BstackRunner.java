@@ -44,11 +44,11 @@ public class BstackRunner implements TestTemplateInvocationContextProvider {
             server = (String) mainConfig.get("server");
             username = System.getenv("BROWSERSTACK_USERNAME");
             if (username == null) {
-                username = (String) mainConfig.get("user");
+                username = (String) mainConfig.get("userName");
             }
             accesskey = System.getenv("BROWSERSTACK_ACCESS_KEY");
             if (accesskey == null) {
-                accesskey = (String) mainConfig.get("key");
+                accesskey = (String) mainConfig.get("accessKey");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -116,6 +116,7 @@ public class BstackRunner implements TestTemplateInvocationContextProvider {
                 bstackOptions = new HashMap<>();
                 bstackOptions.putAll(bstackOptionsCommonCaps);
                 bstackOptions.putAll(bstackOptionsPlatform);
+                bstackOptions.put("source","junit-5:sample-master:v1.0");
                 capabilities.setCapability("bstack:options", bstackOptions);
 
                 desiredCapsInvocationContexts.add(invocationContext(capabilities));

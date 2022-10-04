@@ -4,8 +4,8 @@
   "accessKey": "BROWSERSTACK_ACCESS_KEY",
   "capabilities": {
     "bstack:options": {
-      "sessionName": "single_test",
-      "buildName": "junit-browserstack",
+      "sessionName": "BStack single junit-4",
+      "buildName": "browserstack-build-1",
       "projectName": "My Test Project",
       "seleniumVersion": "4.0.0",
       "debug": true
