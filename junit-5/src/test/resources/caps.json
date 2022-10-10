@@ -6,8 +6,8 @@
     "single": {
       "common_caps": {
         "bstack:options": {
-          "buildName": "junit5-browserstack",
-          "sessionName": "single-test",
+          "sessionName": "BStack single junit-5",
+          "buildName": "browserstack-build-1",
           "seleniumVersion": "4.0.0",
           "networkLogs": "true",
           "consoleLogs": "verbose",
@@ -28,8 +28,8 @@
     "local": {
       "common_caps": {
         "bstack:options": {
-          "buildName": "junit5-browserstack",
-          "sessionName": "local-test",
+          "sessionName": "BStack local junit-5",
+          "buildName": "browserstack-build-1",
           "seleniumVersion": "4.0.0",
           "consoleLogs": "verbose",
           "debug": "true",
@@ -50,8 +50,8 @@
     "parallel": {
       "common_caps": {
         "bstack:options": {
-          "buildName": "junit5-browserstack",
-          "sessionName": "parallel-test",
+          "sessionName": "BStack parallel junit-5",
+          "buildName": "browserstack-build-1",
           "seleniumVersion": "4.0.0",
           "consoleLogs": "verbose",
           "debug": "true"
