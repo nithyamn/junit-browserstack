@@ -8,17 +8,10 @@ Master branch contains **Selenium 4 - W3C protocol** samples, for **Selenium 3**
 * Clone the repo
 * Install dependencies `mvn install`
 * Update `browserstack.yml` files inside the root directory with your [BrowserStack Username and Access Key](https://www.browserstack.com/accounts/settings).
-* For parallel testing, control the concurrency by setting the value for `parallel.count`. Junit 5 uses the following properties for parallelism:
-  ```
-  junit.jupiter.execution.parallel.enabled = true
-  junit.jupiter.execution.parallel.mode.default = concurrent
-  junit.jupiter.execution.parallel.config.strategy=fixed
-  junit.jupiter.execution.parallel.config.fixed.parallelism=${parallel.count}
-  ```
+
 ## Running your tests
 * To run a single test, run `mvn test -P single`
 * To run local tests, run `mvn test -P local`
-* To run parallel tests, run `mvn test -P parallel`
 
 Understand how many parallel sessions you need by using our [Parallel Test Calculator](https://www.browserstack.com/automate/parallel-calculator?ref=github)
 
