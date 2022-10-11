@@ -94,6 +94,7 @@ public class BrowserStackJUnitTest {
                 capabilities.setCapability(pair.getKey(), pair.getValue());
             }
         }
+        bstackOptions.put("source","junit-4:sample-master:v1.0");
         capabilities.setCapability("bstack:options", bstackOptions);
 
         username = System.getenv("BROWSERSTACK_USERNAME");

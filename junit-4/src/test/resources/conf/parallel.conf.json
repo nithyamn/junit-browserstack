@@ -4,7 +4,7 @@
   "accessKey": "BROWSERSTACK_ACCESS_KEY",
   "capabilities": {
     "bstack:options": {
-      "sessionName": "BStack Parallel JUnit4",
+      "sessionName": "BStack parallel junit-4",
       "buildName": "browserstack-build-1",
       "projectName": "My Test Project",
       "debug": true,
