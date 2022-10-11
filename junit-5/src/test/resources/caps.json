@@ -6,8 +6,8 @@
     "single": {
       "common_caps": {
         "bstack:options": {
-          "buildName": "junit5-browserstack",
-          "sessionName": "single-test",
+          "buildName": "browserstack-build-1",
+          "sessionName": "BStack Single JUnit5",
           "seleniumVersion": "4.0.0",
           "networkLogs": "true",
           "consoleLogs": "verbose",
@@ -28,8 +28,8 @@
     "local": {
       "common_caps": {
         "bstack:options": {
-          "buildName": "junit5-browserstack",
-          "sessionName": "local-test",
+          "buildName": "browserstack-build-1",
+          "sessionName": "BStack Local JUnit5",
           "seleniumVersion": "4.0.0",
           "consoleLogs": "verbose",
           "debug": "true",
@@ -50,8 +50,8 @@
     "parallel": {
       "common_caps": {
         "bstack:options": {
-          "buildName": "junit5-browserstack",
-          "sessionName": "parallel-test",
+          "buildName": "browserstack-build-1",
+          "sessionName": "BStack Parallel JUnit5",
           "seleniumVersion": "4.0.0",
           "consoleLogs": "verbose",
           "debug": "true"
@@ -66,14 +66,6 @@
           "browser": "chrome",
           "browserVersion": "latest-1"
         },
-        "safari": {
-          "bstack:options": {
-            "os": "OS X",
-            "osVersion": "Big Sur"
-          },
-          "browser": "safari",
-          "browserVersion": "latest"
-        },
         "edge": {
           "bstack:options": {
             "os": "Windows",
@@ -82,44 +74,10 @@
           "browser": "edge",
           "browserVersion": "latest-2"
         },
-        "firefox": {
-          "bstack:options": {
-            "os": "OS X",
-            "osVersion": "Monterey"
-          },
-          "browser": "firefox",
-          "browserVersion": "latest"
-        },
-        "android": {
-          "bstack:options": {
-            "deviceName": "Samsung Galaxy S21",
-            "osVersion": "11.0"
-          }
-        },
         "ios": {
           "bstack:options": {
             "deviceName": "iPhone 12 Mini",
             "osVersion": "14"
-          }
-        },
-        "tab": {
-          "bstack:options": {
-            "deviceName": "Samsung Galaxy Tab S7"
-          }
-        },
-        "ipad": {
-          "bstack:options": {
-            "deviceName": "iPad Mini 2019"
-          }
-        },
-        "xiaomi": {
-          "bstack:options": {
-            "deviceName": "Xiaomi Redmi Note 9"
-          }
-        },
-        "oneplus": {
-          "bstack:options": {
-            "deviceName": "OnePlus 9"
           }
         }
       }

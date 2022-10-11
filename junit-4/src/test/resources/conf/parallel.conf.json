@@ -4,8 +4,8 @@
   "accessKey": "BROWSERSTACK_ACCESS_KEY",
   "capabilities": {
     "bstack:options": {
-      "sessionName": "parallel_test",
-      "buildName": "junit-browserstack",
+      "sessionName": "BStack Parallel JUnit4",
+      "buildName": "browserstack-build-1",
       "projectName": "My Test Project",
       "debug": true,
       "seleniumVersion": "4.0.0"
@@ -20,23 +20,11 @@
       }
     },
     {
-      "browser": "firefox",
-      "bstack:options": {
-        "os": "Windows",
-        "osVersion": "11"
-      }
-    },
-    {
       "browser": "safari",
       "browserVersion": "latest",
       "bstack:options": {
         "os": "OS X",
         "osVersion": "Monterey"
-      }
-    },
-    {
-      "bstack:options": {
-        "deviceName": "Samsung Galaxy S21"
       }
     },
     {

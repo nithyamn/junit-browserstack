@@ -4,8 +4,8 @@
   "accessKey": "BROWSERSTACK_ACCESS_KEY",
   "capabilities": {
     "bstack:options": {
-      "sessionName": "local_test",
-      "buildName": "junit-browserstack",
+      "sessionName": "BStack Local JUnit4",
+      "buildName": "browserstack-build-1",
       "projectName": "My Test Project",
       "debug": true,
       "local": true,
