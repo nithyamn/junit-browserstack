@@ -20,23 +20,11 @@
       }
     },
     {
-      "browser": "firefox",
-      "bstack:options": {
-        "os": "Windows",
-        "osVersion": "11"
-      }
-    },
-    {
       "browser": "safari",
       "browserVersion": "latest",
       "bstack:options": {
         "os": "OS X",
         "osVersion": "Monterey"
-      }
-    },
-    {
-      "bstack:options": {
-        "deviceName": "Samsung Galaxy S21"
       }
     },
     {
