@@ -17,7 +17,7 @@
         "os": "Windows",
         "osVersion": "11"
       },
-      "browser": "Chrome",
+      "browserName": "Chrome",
       "browserVersion": "latest"
     }
   ]
