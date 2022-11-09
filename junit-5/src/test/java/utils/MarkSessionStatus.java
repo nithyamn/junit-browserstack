@@ -20,7 +20,7 @@ public class MarkSessionStatus extends BstackRunner {
 
     public void markTestStatus(String status, String reason) {
         try {
-            URI uri = new URI("https://" + username + ":" + accesskey + "@api.browserstack.com/automate/sessions/" + sessionId + ".json");
+            URI uri = new URI("https://" + username + ":" + accessKey + "@api.browserstack.com/automate/sessions/" + sessionId + ".json");
             HttpPut putRequest = new HttpPut(uri);
 
             ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();

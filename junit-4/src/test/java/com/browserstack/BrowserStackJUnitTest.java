@@ -14,8 +14,8 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 
@@ -71,7 +71,7 @@ public class BrowserStackJUnitTest {
         JSONArray envs = (JSONArray) config.get("environments");
         bstackOptions = new HashMap();
 
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+        MutableCapabilities capabilities = new MutableCapabilities();
 
         Map<String, Object> envCapabilities = (Map<String, Object>) envs.get(taskID);
         Iterator<Map.Entry<String, Object>> it = envCapabilities.entrySet().iterator();
@@ -113,7 +113,7 @@ public class BrowserStackJUnitTest {
                 new URL("https://" + username + ":" + accessKey + "@" + config.get("server") + "/wd/hub"), capabilities);
     }
 
-    public void checkAndStartBrowserStackLocal(DesiredCapabilities capabilities, String accessKey) throws Exception {
+    public void checkAndStartBrowserStackLocal(MutableCapabilities capabilities, String accessKey) throws Exception {
         if (bsLocal != null) {
             return;
         }

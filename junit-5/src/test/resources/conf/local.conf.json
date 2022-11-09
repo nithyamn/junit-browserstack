@@ -4,21 +4,22 @@
   "accessKey": "BROWSERSTACK_ACCESS_KEY",
   "capabilities": {
     "bstack:options": {
-      "sessionName": "BStack single junit-4",
+      "sessionName": "BStack local junit-5",
       "buildName": "browserstack-build-1",
       "projectName": "My Test Project",
-      "seleniumVersion": "4.0.0",
-      "debug": true
+      "debug": true,
+      "local": true,
+      "seleniumVersion": "4.0.0"
     }
   },
   "environments": [
     {
       "bstack:options": {
         "os": "Windows",
-        "osVersion": "11"
+        "osVersion": "10"
       },
-      "browserName": "Chrome",
-      "browserVersion": "latest"
+      "browserName": "chrome",
+      "browserVersion": "latest-1"
     }
   ]
 }

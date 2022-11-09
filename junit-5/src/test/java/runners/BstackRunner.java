@@ -1,10 +1,11 @@
 package runners;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.extension.*;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import utils.SetupLocalTesting;
 
@@ -16,46 +17,40 @@ import java.util.stream.Stream;
 
 public class BstackRunner implements TestTemplateInvocationContextProvider {
     public WebDriver driver;
-    public DesiredCapabilities capabilities;
-    public String username, accesskey, server;
+    public String username, accessKey, server;
     private JSONObject mainConfig;
-    private JSONObject browserConfig;
-    private JSONObject profileConfig;
-    private JSONObject testConfig;
-    private JSONObject platformConfig;
-    private JSONObject commonCapsConfig;
-    private HashMap<String, String> allCapsMap;
-    private HashMap<String, String> commonCapsMap;
-    private HashMap<String, String> bstackOptions;
-    private HashMap<String, String> bstackOptionsCommonCaps;
-    private HashMap<String, String> bstackOptionsPlatform;
+    private JSONArray platformConfig;
+    private Map<String, Object> commonCapsConfig;
 
 
     public BstackRunner() {
         this.username = setupCredsAndServer().get("username");
-        this.accesskey = setupCredsAndServer().get("accesskey");
+        this.accessKey = setupCredsAndServer().get("accesskey");
         this.server = setupCredsAndServer().get("server");
     }
 
     public HashMap<String, String> setupCredsAndServer() {
         try {
-            JSONParser parse = new JSONParser();
-            mainConfig = (JSONObject) parse.parse(new FileReader("src/test/resources/caps.json"));
+            if (System.getProperty("config") != null) {
+                JSONParser parser = new JSONParser();
+                mainConfig = (JSONObject) parser
+                        .parse(new FileReader("src/test/resources/conf/" + System.getProperty("config")));
+            }
             server = (String) mainConfig.get("server");
             username = System.getenv("BROWSERSTACK_USERNAME");
             if (username == null) {
                 username = (String) mainConfig.get("userName");
             }
-            accesskey = System.getenv("BROWSERSTACK_ACCESS_KEY");
-            if (accesskey == null) {
-                accesskey = (String) mainConfig.get("accessKey");
+            accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY");
+            if (accessKey == null) {
+                accessKey = (String) mainConfig.get("accessKey");
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         HashMap<String, String> creds = new HashMap();
         creds.put("username", username);
-        creds.put("accesskey", accesskey);
+        creds.put("accesskey", accessKey);
         creds.put("server", server);
         return creds;
     }
@@ -69,65 +64,54 @@ public class BstackRunner implements TestTemplateInvocationContextProvider {
     public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext extensionContext) {
         List<TestTemplateInvocationContext> desiredCapsInvocationContexts = new ArrayList<>();
 
-        //picks the test profile based on the maven command executed - single, local, parallel
-        String profile = System.getProperty("config");
-
         try {
-            testConfig = (JSONObject) mainConfig.get("tests");
-            profileConfig = (JSONObject) testConfig.get(profile);
-            platformConfig = (JSONObject) profileConfig.get("platform");
-            commonCapsConfig = (JSONObject) profileConfig.get("common_caps");
-            commonCapsMap = (HashMap<String, String>) commonCapsConfig;
+            platformConfig = (JSONArray) mainConfig.get("environments");
+            commonCapsConfig = (Map<String, Object>) mainConfig.get("capabilities");
 
-            Iterator platformIterator = platformConfig.keySet().iterator();
-            while (platformIterator.hasNext()) {
-
-                capabilities = new DesiredCapabilities();
-                Iterator commonCapsIterator = commonCapsMap.entrySet().iterator();
-                while (commonCapsIterator.hasNext()) {
-                    Map.Entry capsName = (Map.Entry) commonCapsIterator.next();
-                    if ("bstack:options".equals(capsName.getKey().toString())) {
-                        bstackOptionsCommonCaps = (HashMap<String, String>) commonCapsConfig.get("bstack:options");
+            for (Object platform : platformConfig) {
+                MutableCapabilities capabilities = new MutableCapabilities();
+                HashMap<String, Object> bstackOptions = new HashMap<>();
+                Map<String, Object> envCapabilities = (Map<String, Object>) platform;
+                System.out.println("envCaps " + envCapabilities);
+                Iterator<Map.Entry<String, Object>> it = envCapabilities.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, Object> pair = it.next();
+                    if ("bstack:options".equals(pair.getKey())) {
+                        bstackOptions.putAll((Map<? extends String, ? extends String>) pair.getValue());
                     } else {
-                        capabilities.setCapability((String) capsName.getKey(), capsName.getValue());
+                        capabilities.setCapability(pair.getKey(), pair.getValue());
                     }
                 }
 
-                final String platformType = (String) platformIterator.next();
-                browserConfig = (JSONObject) platformConfig.get(platformType);
-                allCapsMap = (HashMap<String, String>) browserConfig;
-
-                Iterator finalCapsIterator = allCapsMap.entrySet().iterator();
-                while (finalCapsIterator.hasNext()) {
-                    Map.Entry platformName = (Map.Entry) finalCapsIterator.next();
-                    if ("bstack:options".equals(platformName.getKey().toString())) {
-                        bstackOptionsPlatform = (HashMap<String, String>) browserConfig.get("bstack:options");
+                it = commonCapsConfig.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, Object> pair = it.next();
+                    if ("bstack:options".equals(pair.getKey())) {
+                        bstackOptions.putAll((Map<? extends String, ? extends String>) pair.getValue());
                     } else {
-                        capabilities.setCapability((String) platformName.getKey(), platformName.getValue());
+                        capabilities.setCapability(pair.getKey(), pair.getValue());
                     }
                 }
                 //Initializing local testing connection
-                if (bstackOptionsCommonCaps.containsKey("local")) {
+                if (bstackOptions.containsKey("local")) {
                     HashMap<String, String> localOptions = new HashMap<>();
-                    localOptions.put("key", accesskey);
+                    localOptions.put("key", accessKey);
                     //Add more local options here, e.g. forceLocal, localIdentifier, etc.
                     SetupLocalTesting.createInstance(localOptions);
                 }
-                bstackOptions = new HashMap<>();
-                bstackOptions.putAll(bstackOptionsCommonCaps);
-                bstackOptions.putAll(bstackOptionsPlatform);
                 bstackOptions.put("source","junit-5:sample-master:v1.0");
                 capabilities.setCapability("bstack:options", bstackOptions);
+                System.out.println("Caps " + capabilities);
 
                 desiredCapsInvocationContexts.add(invocationContext(capabilities));
             }
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
         return desiredCapsInvocationContexts.stream();
     }
 
-    private TestTemplateInvocationContext invocationContext(DesiredCapabilities caps) {
+    private TestTemplateInvocationContext invocationContext(MutableCapabilities caps) {
         return new TestTemplateInvocationContext() {
 
             @Override
@@ -144,7 +128,7 @@ public class BstackRunner implements TestTemplateInvocationContextProvider {
                     public Object resolveParameter(ParameterContext parameterContext,
                                                    ExtensionContext extensionContext) {
                         try {
-                            driver = new RemoteWebDriver(new URL("https://" + username + ":" + accesskey + "@" + server + "/wd/hub"), caps);
+                            driver = new RemoteWebDriver(new URL("https://" + username + ":" + accessKey + "@" + server + "/wd/hub"), caps);
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         }
