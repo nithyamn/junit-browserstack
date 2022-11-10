@@ -72,7 +72,7 @@ public class BstackRunner implements TestTemplateInvocationContextProvider {
                 MutableCapabilities capabilities = new MutableCapabilities();
                 HashMap<String, Object> bstackOptions = new HashMap<>();
                 Map<String, Object> envCapabilities = (Map<String, Object>) platform;
-                System.out.println("envCaps " + envCapabilities);
+
                 Iterator<Map.Entry<String, Object>> it = envCapabilities.entrySet().iterator();
                 while (it.hasNext()) {
                     Map.Entry<String, Object> pair = it.next();
@@ -101,7 +101,6 @@ public class BstackRunner implements TestTemplateInvocationContextProvider {
                 }
                 bstackOptions.put("source","junit-5:sample-master:v1.0");
                 capabilities.setCapability("bstack:options", bstackOptions);
-                System.out.println("Caps " + capabilities);
 
                 desiredCapsInvocationContexts.add(invocationContext(capabilities));
             }
