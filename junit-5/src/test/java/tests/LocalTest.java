@@ -13,9 +13,9 @@ public class LocalTest {
         MarkSessionStatus sessionStatus = new MarkSessionStatus(driver);
 
         try {
-            driver.get("http://localhost:45691/check");
-            String validateContent = driver.findElement(By.cssSelector("body")).getText();
-            if (validateContent.contains("Up and running")) {
+            driver.get("http://bs-local.com:45454/");
+            String validateContent = driver.getTitle();
+            if (validateContent.contains("BrowserStack Local")) {
                 sessionStatus.markTestStatus("passed", "Local content validated!");
             } else {
                 sessionStatus.markTestStatus("failed", "Local content not validated!");

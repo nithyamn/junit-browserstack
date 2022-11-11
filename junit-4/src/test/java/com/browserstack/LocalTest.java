@@ -12,9 +12,9 @@ public class LocalTest extends BrowserStackJUnitTest {
     @Test
     public void test() throws URISyntaxException, IOException {
         try {
-            driver.get("http://bs-local.com:45691/check");
+            driver.get("http://bs-local.com:45454/");
 
-            assertTrue(driver.getPageSource().contains("Up and running"));
+            assertTrue(driver.getTitle().contains("BrowserStack Local"));
             mark(driver, "passed", "Local content validated!");
 
         } catch (Throwable t) {
