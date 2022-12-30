@@ -1,9 +1,7 @@
 package com.browserstack;
 
-import org.json.simple.JSONObject;
 import org.junit.After;
 import org.junit.Before;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -32,24 +30,13 @@ public class BrowserStackJUnitTest {
         MutableCapabilities capabilities = new MutableCapabilities();
         userName = System.getenv("BROWSERSTACK_USERNAME") != null ? System.getenv("BROWSERSTACK_USERNAME") : (String) browserStackYamlMap.get("userName");
         accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY") != null ? System.getenv("BROWSERSTACK_ACCESS_KEY") : (String) browserStackYamlMap.get("accessKey");
-        this.driver = new RemoteWebDriver(
+        driver = new RemoteWebDriver(
                 new URL(String.format("https://%s:%s@hub.browserstack.com/wd/hub", userName , accessKey)), capabilities);
-    }
-
-    public static void mark(WebDriver remoteDriver, String status, String reason) {
-        final JavascriptExecutor jse = (JavascriptExecutor) remoteDriver;
-        JSONObject executorObject = new JSONObject();
-        JSONObject argumentsObject = new JSONObject();
-        argumentsObject.put("status", status);
-        argumentsObject.put("reason", reason);
-        executorObject.put("action", "setSessionStatus");
-        executorObject.put("arguments", argumentsObject);
-        jse.executeScript(String.format("browserstack_executor: %s", executorObject));
     }
 
     @After
     public void tearDown() {
-        this.driver.quit();
+        driver.quit();
     }
 
     private String getUserDir() {
