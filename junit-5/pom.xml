@@ -8,28 +8,25 @@
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <junit-jupiter-engine>5.8.1</junit-jupiter-engine>
-        <junit-vintage-engine>5.4.0</junit-vintage-engine>
+        <junit-jupiter.version>5.9.1</junit-jupiter.version>
         <json-simple>1.1</json-simple>
-        <selenium-java>4.1.0</selenium-java>
+        <selenium-java>4.1.4</selenium-java>
         <maven-surefire-plugin>3.0.0-M5</maven-surefire-plugin>
-        <browserstack-local-java>1.0.6</browserstack-local-java>
         <httpclient>4.5.13</httpclient>
-        <parallel.count>5</parallel.count>
         <tests.single>**/tests.SingleTest.java</tests.single>
         <tests.local>**/tests.LocalTest.java</tests.local>
     </properties>
     <dependencies>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${junit-jupiter-engine}</version>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>${junit-vintage-engine}</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit-jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -47,35 +44,49 @@
             <artifactId>maven-surefire-plugin</artifactId>
             <version>${maven-surefire-plugin}</version>
             <type>maven-plugin</type>
-            <configuration>
-                <includes>
-                    <include>${tests.single}</include>
-                </includes>
-                <systemPropertyVariables>
-                    <config>parallel.conf.json</config>
-                </systemPropertyVariables>
-                <properties>
-                    <configurationParameters>
-                        junit.jupiter.execution.parallel.enabled = true
-                        junit.jupiter.execution.parallel.mode.default = concurrent
-                        junit.jupiter.execution.parallel.config.strategy=fixed
-                        junit.jupiter.execution.parallel.config.fixed.parallelism=${parallel.count}
-                    </configurationParameters>
-                </properties>
-                <testFailureIgnore>false</testFailureIgnore>
-            </configuration>
-        </dependency>
-        <dependency>
-            <groupId>com.browserstack</groupId>
-            <artifactId>browserstack-local-java</artifactId>
-            <version>${browserstack-local-java}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>${httpclient}</version>
         </dependency>
+        <dependency>
+            <groupId>com.browserstack</groupId>
+            <artifactId>browserstack-java-sdk</artifactId>
+            <version>LATEST</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>getClasspathFilenames</id>
+                        <goals>
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin}</version>
+                <configuration>
+                    <includes>
+                        <include>${tests.single}</include>
+                    </includes>
+                    <argLine>
+                        -javaagent:${com.browserstack:browserstack-java-sdk:jar}
+                    </argLine>
+                    <testFailureIgnore>false</testFailureIgnore>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
     <profiles>
         <profile>
             <id>single</id>
@@ -89,9 +100,9 @@
                             <includes>
                                 <include>${tests.single}</include>
                             </includes>
-                            <systemPropertyVariables>
-                                <config>single.conf.json</config>
-                            </systemPropertyVariables>
+                            <argLine>
+                                -javaagent:${com.browserstack:browserstack-java-sdk:jar}
+                            </argLine>
                             <testFailureIgnore>false</testFailureIgnore>
                         </configuration>
                     </plugin>
@@ -110,38 +121,9 @@
                             <includes>
                                 <include>${tests.local}</include>
                             </includes>
-                            <systemPropertyVariables>
-                                <config>local.conf.json</config>
-                            </systemPropertyVariables>
-                            <testFailureIgnore>false</testFailureIgnore>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>parallel</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>3.0.0-M5</version>
-                        <configuration>
-                            <includes>
-                                <include>${tests.single}</include>
-                            </includes>
-                            <systemPropertyVariables>
-                                <config>parallel.conf.json</config>
-                            </systemPropertyVariables>
-                            <properties>
-                                <configurationParameters>
-                                    junit.jupiter.execution.parallel.enabled = true
-                                    junit.jupiter.execution.parallel.mode.default = concurrent
-                                    junit.jupiter.execution.parallel.config.strategy=fixed
-                                    junit.jupiter.execution.parallel.config.fixed.parallelism=${parallel.count}
-                                </configurationParameters>
-                            </properties>
+                            <argLine>
+                                -javaagent:${com.browserstack:browserstack-java-sdk:jar}
+                            </argLine>
                             <testFailureIgnore>false</testFailureIgnore>
                         </configuration>
                     </plugin>

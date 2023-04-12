@@ -1,19 +1,19 @@
-package tests;
+package com.browserstack;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import runners.BstackRunner;
 
 import java.time.Duration;
 
-public class SingleTest extends BstackRunner {
+import static org.junit.Assert.assertTrue;
+
+public class SampleTest extends BrowserStackJUnitTest {
 
     @Test
-    void singleTest() {
+    public void test() {
         driver.get("https://bstackdemo.com/");
         final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.titleIs("StackDemo"));
@@ -22,6 +22,6 @@ public class SingleTest extends BstackRunner {
         cart_btn.click();
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("float-cart__content")));
         final String product_in_cart = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='__next']/div/div/div[2]/div[2]/div[2]/div/div[3]/p[1]"))).getText();
-        Assertions.assertTrue(product_name.matches(product_in_cart), "Product add to the cart - Failed!");
+        assertTrue("Product add to the cart - Failed!", product_name.matches(product_in_cart));
     }
 }
