@@ -31,7 +31,7 @@ public class BrowserStackJUnitTest {
         userName = System.getenv("BROWSERSTACK_USERNAME") != null ? System.getenv("BROWSERSTACK_USERNAME") : (String) browserStackYamlMap.get("userName");
         accessKey = System.getenv("BROWSERSTACK_ACCESS_KEY") != null ? System.getenv("BROWSERSTACK_ACCESS_KEY") : (String) browserStackYamlMap.get("accessKey");
         HashMap<String, Object> bStackOptions = new HashMap<>();
-        bStackOptions.put("source", "junit4:sample-sdk:v1.1");
+        bStackOptions.put("source", "junit4:sample-master:v1.2");
         capabilities.setCapability("bstack:options", bStackOptions);
         driver = new RemoteWebDriver(
                 new URL(String.format("https://%s:%s@hub.browserstack.com/wd/hub", userName , accessKey)), capabilities);
