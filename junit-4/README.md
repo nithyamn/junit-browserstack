@@ -15,7 +15,7 @@
 * To run local tests, set `browserStackLocal: true` in `browserstack.yml` and  run `mvn test -P local`
 
 ## Running your tests with Gradle
-* To run a test, run `gradle sampelTest`
+* To run a test, run `gradle sampleTest`
 * To run local tests, set `browserStackLocal: true` in `browserstack.yml` and  run `gradle localTest`
 * Note: Currently, the SDK setup with gradle only allows sequential execution on a single platform combination
 
