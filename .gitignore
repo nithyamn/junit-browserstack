@@ -23,3 +23,6 @@ local.log
 *.png
 *.txt
 **/logs
+gradlew.bat
+gradlew
+settings.gradle

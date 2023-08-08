@@ -10,9 +10,14 @@
 * Install dependencies `mvn install`
 * Update `browserstack.yml` files inside the root directory with your [BrowserStack Username and Access Key](https://www.browserstack.com/accounts/settings). 
 
-## Running your tests
+## Running your tests with Maven
 * To run a parallel test, run `mvn test -P sample`
 * To run local tests, set `browserStackLocal: true` in `browserstack.yml` and  run `mvn test -P local`
+
+## Running your tests with Gradle
+* To run a test, run `gradle sampelTest`
+* To run local tests, set `browserStackLocal: true` in `browserstack.yml` and  run `gradle localTest`
+* Note: Currently, the SDK setup with gradle only allows sequential execution on a single platform combination
 
  Understand how many parallel sessions you need by using our [Parallel Test Calculator](https://www.browserstack.com/automate/parallel-calculator?ref=github)
 
