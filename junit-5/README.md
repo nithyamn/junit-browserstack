@@ -9,9 +9,15 @@ Master branch contains **Selenium 4 - W3C protocol** samples, for **Selenium 3**
 * Install dependencies `mvn install`
 * Update `browserstack.yml` files inside the root directory with your [BrowserStack Username and Access Key](https://www.browserstack.com/accounts/settings).
 
-## Running your tests
+## Running your tests using Maven
 * To run a single test, run `mvn test -P single`
 * To run local tests, run `mvn test -P local`
+
+## Running your tests with Gradle
+* To run a test, run `gradle singleTest`
+* To run local tests, set `browserStackLocal: true` in `browserstack.yml` and  run `gradle localTest`
+* Note: Currently, the SDK setup with gradle only allows parallel execution on a single platform combination based on the no.of tests configured. `m * n` parallelization is not suppported yet
+
 
 Understand how many parallel sessions you need by using our [Parallel Test Calculator](https://www.browserstack.com/automate/parallel-calculator?ref=github)
 

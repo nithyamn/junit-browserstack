@@ -17,7 +17,7 @@
 ## Running your tests with Gradle
 * To run a test, run `gradle sampleTest`
 * To run local tests, set `browserStackLocal: true` in `browserstack.yml` and  run `gradle localTest`
-* Note: Currently, the SDK setup with gradle only allows sequential execution on a single platform combination
+* Note: Currently, the SDK setup with gradle only allows parallel execution on a single platform combination based on the no.of tests configured. `m * n` parallelization is not suppported yet
 
  Understand how many parallel sessions you need by using our [Parallel Test Calculator](https://www.browserstack.com/automate/parallel-calculator?ref=github)
 
