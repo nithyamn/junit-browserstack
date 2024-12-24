@@ -1,5 +1,6 @@
 package tests;
 
+import com.browserstack.PercySDK;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -17,6 +18,8 @@ public class BStackSampleTest extends BstackRunner {
         driver.get("https://bstackdemo.com/");
         final WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.titleIs("StackDemo"));
+        PercySDK.screenshot(driver, "My Screenshot");
+
         String product_name = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id='1']/p"))).getText();
         WebElement cart_btn = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='1']/div[4]")));
         cart_btn.click();
